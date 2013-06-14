@@ -15,7 +15,7 @@ class ML_Rest_Base
 	protected $apiKey = '';
 	protected $path = '';
 	
-	public function __construct ($url = 'http://mailer.mailer.lan/api/v1/', $verb = 'GET')
+	public function __construct ($url = 'http://api.mailer.lt/api/v1/', $verb = 'GET')
 	{
 		$this->url				= $url;
 		$this->verb				= $verb;
