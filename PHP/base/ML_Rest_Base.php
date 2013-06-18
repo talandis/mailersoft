@@ -15,7 +15,7 @@ class ML_Rest_Base
 	protected $apiKey = '';
 	protected $path = '';
 	
-	public function __construct ($url = 'http://api.mailer.lt/api/v1/', $verb = 'GET')
+	public function __construct ($url = 'https://api.mailersoft.com/api/v1/', $verb = 'GET')
 	{
 		$this->url				= $url;
 		$this->verb				= $verb;
@@ -154,6 +154,10 @@ class ML_Rest_Base
 		curl_setopt($curlHandle, CURLOPT_URL, $this->path);
 		curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curlHandle, CURLOPT_HTTPHEADER, array ('Accept: ' . $this->acceptType));
+
+		curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, false );
+        curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false );
+        curl_setopt($curlHandle, CURLOPT_FOLLOWLOCATION, true );
 	}
 	
 	protected function setAuth (&$curlHandle)
