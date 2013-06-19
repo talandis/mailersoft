@@ -41,14 +41,14 @@
 
 		function getBounces( )
 		{
-			$this->path .= 'unsubscribes/';
+			$this->path .= 'bounces/';
 
 			return $this->execute( 'GET' );
 		}
 
 		function getJunk( )
 		{
-			$this->path .= 'unsubscribes/';
+			$this->path .= 'junks/';
 
 			return $this->execute( 'GET' );
 		}

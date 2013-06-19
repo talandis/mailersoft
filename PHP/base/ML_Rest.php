@@ -25,6 +25,8 @@
 				$this->path = $this->url . $this->name . '/' . $id . '/';
 			else
 				$this->path = $this->url . $this->name . '/';
+
+			return $this;
 		}
 
 		function getAll( )
