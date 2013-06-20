@@ -47,6 +47,13 @@
 
 			return $this->execute( 'DELETE' );
 		}
+
+		function unsubscribe( $email )
+		{
+			$this->path .= 'unsubscribe/?email=' . urlencode( $email );
+
+			return $this->execute( 'POST' );
+		}
 	}
 
 ?>
