@@ -34,7 +34,7 @@
 			return $this->execute( 'GET' );
 		}
 
-		function get( $data )
+		function get( $data = null )
 		{
 			if (!$this->id)
 				throw new InvalidArgumentException('ID is not set.');
@@ -42,7 +42,7 @@
 			return $this->execute( 'GET' );
 		}
 
-		function add( $data )
+		function add( $data = null )
 		{
 			return $this->execute( 'POST', $data );
 		}
@@ -52,7 +52,7 @@
 			return $this->execute( 'PUT', $data );
 		}
 
-		function remove( $data )
+		function remove( $data = null )
 		{
 			return $this->execute( 'DELETE' );
 		}

@@ -1,6 +1,6 @@
 <?php
 	
-	require_once dirname(__FILE__).'/base/ML_Rest.php';
+	require_once dirname(__FILE__).'/ML_Rest.php';
 	
 	class ML_Subscribers extends ML_Rest
 	{
@@ -11,7 +11,7 @@
 			parent::__construct($api_key);
 		}
 
-		function add( $subscriber, $resubscribe = 0 )
+		function add( $subscriber = null, $resubscribe = 0 )
 		{
 			$subscriber['resubscribe'] = $resubscribe;
 
@@ -29,7 +29,7 @@
 			return $this->execute( 'POST', $data );
 		}
 
-		function get( $email, $history = 0 )
+		function get( $email = null, $history = 0 )
 		{
 			$this->setId( null );
 
@@ -41,7 +41,7 @@
 			return $this->execute( 'GET' );
 		}
 
-		function remove( $email )
+		function remove( $email = null )
 		{
 			$this->path .= '?email=' . urlencode( $email );
 
