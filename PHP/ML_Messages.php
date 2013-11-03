@@ -1,63 +1,55 @@
 <?php
+	
+	require_once dirname(__FILE__).'/ML_Rest_Base.php';
 
-class ML_Messages {
+	class ML_Messages extends ML_Rest_Base
+	{
+		private $fromName;
 
-    const MAILER_SERVER_URI = 'https://api.mailersoft.com/api/v1/messages/';
+		private $fromEmail;
 
-    const TEST_SERVER_URI = 'https://test.mailersoft.com/api/v1/messages/';
+		private $variables = array();
 
-    private $apiKey;
+		private $mailId;
 
-    private $fromName;
+		private $recipientEmail;
 
-        private $fromEmail;
+		private $recipientName;
 
-        private $variables = array();
+		private $type;
 
-        private $mailId;
+		private $language;
 
-        private $recipientEmail;
+		private $batchRecipients;
 
-        private $recipientName;
+		private $attachments;
 
-        private $type;
+		private $replyToEmail;
 
-        private $language;
+		private $replyToName;
 
-        private $batchRecipients;
+		private $isTest = 0;
 
-        private $attachments;
+        function __construct( $api_key ) {
+			
+			parent::__construct();
 
-        private $replyToEmail;
+			$this->apiKey = $api_key;
 
-        private $replyToName;
+			$this->path = $this->url . 'messages/';
+		}
 
-    private $isTest = 0;
+		public function setTest() {
 
-        public function __construct( $apiKey ) {
+			$this->isTest = 1;
 
-                $this->setApiKey( $apiKey );
-
-        }
-
-    public function setTest() {
-
-        $this->isTest = 1;
-
-        return $this;
-    }
+			return $this;
+		}
 
         public function setRecipient( $email, $name = '' ) {
 
            $this->recipientEmail = $email;
            $this->recipientName = $name;
-
-           return $this;
-        }
-
-        public function setApiKey( $apiKey ) {
-
-           $this->apiKey = $apiKey;
 
            return $this;
         }
@@ -102,30 +94,29 @@ class ML_Messages {
            return $this;
         }
 
-    public function setType( $type ) {
+		public function setType( $type ) {
 
-        $this->type = $type;
+			$this->type = $type;
 
-        return $this;
-
-    }
+			return $this;
+		}
 
         public function setLanguage( $code ) {
 
-                $this->language = $code;
+			$this->language = $code;
 
-                return $this;
+			return $this;
         }
 
         public function addRecipient( $recipient ) {
 
-                if ( !isset( $recipient['email'] ) ) {
-                        $recipient['email'] = '';
-                }
+			if ( !isset( $recipient['email'] ) ) {
+				$recipient['email'] = '';
+			}
 
-                if ( !isset( $recipient['variables'] ) ) {
-                        $recipient['variables'] = '';
-                }
+			if ( !isset( $recipient['variables'] ) ) {
+				$recipient['variables'] = '';
+			}
 
             $this->batchRecipients[] = $recipient;
 
@@ -143,61 +134,41 @@ class ML_Messages {
 
         public function setReplyTo( $email, $name = '' ) {
 
-                $this->replyToEmail = $email;
-                $this->replyToName = $name;
+			$this->replyToEmail = $email;
+			$this->replyToName = $name;
 
-                return $this;
+			return $this;
         }
 
         public function addAttachment( $filename, $content ) {
 
-                $this->attachments[] = array('filename' => $filename, 'content' => $content );
+			$this->attachments[] = array('filename' => $filename, 'content' => $content );
 
-                return $this;
+			return $this;
         }
 
         public function send() {
 
-        $data = array(
-            'fromName' => $this->fromName,
-            'fromEmail' => $this->fromEmail,
-            'apiKey' => $this->apiKey,
-            'type' => $this->type,
-            'mailId' => $this->mailId,
-            'replyToEmail' => $this->replyToEmail,
-            'replyToName' => $this->replyToName,
-            'language' => $this->language,
-        );
+			$data = array(
+				'fromName' => $this->fromName,
+				'fromEmail' => $this->fromEmail,
+				'apiKey' => $this->apiKey,
+				'type' => $this->type,
+				'mailId' => $this->mailId,
+				'replyToEmail' => $this->replyToEmail,
+				'replyToName' => $this->replyToName,
+				'language' => $this->language,
+			);
 
-        if ( !empty( $this->batchRecipients ) ) {
+			if ( !empty( $this->batchRecipients ) ) {
+				$data['batch'] = $this->batchRecipients;
+			} else {
+				$data['recipientName'] = $this->recipientName;
+				$data['recipientEmail'] = $this->recipientEmail;
+				$data['variables'] = $this->variables;
+				$data['attachments'] = $this->attachments;
+			}
 
-            $data['batch'] = $this->batchRecipients;
-
-        } else {
-
-            $data['recipientName'] = $this->recipientName;
-            $data['recipientEmail'] = $this->recipientEmail;
-            $data['variables'] = $this->variables;
-                        $data['attachments'] = $this->attachments;
-
+			return $this->execute( 'POST', $data );
         }
-
-        $url = ( $this->isTest ) ? self::TEST_SERVER_URI : self::MAILER_SERVER_URI;
-
-		$ch = curl_init( $url );
-
-		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query( $data ) );
-		curl_setopt($ch, CURLOPT_HEADER, false);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false );
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false );
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true );
-
-		$res = curl_exec($ch);
-
-		curl_close($ch);
-
-		return json_decode($res, true);
-        }
-}
+	}
