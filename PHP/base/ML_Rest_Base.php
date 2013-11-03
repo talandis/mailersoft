@@ -79,7 +79,7 @@ class ML_Rest_Base
 			throw $e;
 		}
 
-		return $this->responseBody;		
+		return json_decode( $this->responseBody, true );		
 	}
 	
 	public function buildPostBody ()
