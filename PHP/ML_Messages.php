@@ -10,7 +10,7 @@
 
 		private $variables = array();
 
-		private $mailId;
+		private $id;
 
 		private $recipientEmail;
 
@@ -87,9 +87,9 @@
            return $this;
         }
 
-        public function setMail( $id ) {
+        public function setId( $id ) {
 
-           $this->mailId = $id;
+           $this->id = $id;
 
            return $this;
         }
@@ -156,14 +156,13 @@
         public function send() {
 
 			$data = array(
-				'fromName' => $this->fromName,
-				'fromEmail' => $this->fromEmail,
+				/*'fromName' => $this->fromName,
+				'fromEmail' => $this->fromEmail,*/
 				'apiKey' => $this->apiKey,
-				'type' => $this->type,
-				'mailId' => $this->mailId,
-				'replyToEmail' => $this->replyToEmail,
+				'id' => $this->id,
+				/*'replyToEmail' => $this->replyToEmail,
 				'replyToName' => $this->replyToName,
-				'language' => $this->language,
+				'language' => $this->language,*/
 			);
 
 			if ( !empty( $this->batchRecipients ) ) {
