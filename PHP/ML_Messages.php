@@ -110,12 +110,18 @@
 
         public function addRecipient( $recipient ) {
 
-			if ( !isset( $recipient['email'] ) ) {
-				$recipient['email'] = '';
+			if ( isset( $recipient['email'] ) ) {
+
+				$recipient['recipientEmail'] = $recipient['email'];
+
+				unset( $recipient['email'] );
 			}
 
-			if ( !isset( $recipient['variables'] ) ) {
-				$recipient['variables'] = '';
+			if ( isset( $recipient['name'] ) ) {
+
+				$recipient['recipientName'] = $recipient['name'];
+
+				unset( $recipient['name'] );
 			}
 
             $this->batchRecipients[] = $recipient;
@@ -169,6 +175,6 @@
 				$data['attachments'] = $this->attachments;
 			}
 
-			return $this->execute( 'POST', $data );
+			return json_decode( $this->execute( 'POST', $data ), true );
         }
 	}
