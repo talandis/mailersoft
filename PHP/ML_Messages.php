@@ -169,6 +169,6 @@
 				$data['attachments'] = $this->attachments;
 			}
 
-			return json_decode( $this->execute( 'POST', $data ), true );
+			return $this->execute( 'POST', $data );
         }
 	}
