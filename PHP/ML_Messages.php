@@ -156,13 +156,8 @@
         public function send() {
 
 			$data = array(
-				/*'fromName' => $this->fromName,
-				'fromEmail' => $this->fromEmail,*/
 				'apiKey' => $this->apiKey,
-				'id' => $this->id,
-				/*'replyToEmail' => $this->replyToEmail,
-				'replyToName' => $this->replyToName,
-				'language' => $this->language,*/
+				'id' => $this->id
 			);
 
 			if ( !empty( $this->batchRecipients ) ) {
