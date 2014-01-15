@@ -1,59 +1,55 @@
 <?php
-	
-	require_once dirname(__FILE__).'/ML_Rest.php';
-	
-	class ML_Subscribers extends ML_Rest
-	{
-		function ML_Subscribers( $api_key )
-		{	
-			$this->name = 'subscribers';
 
-			parent::__construct($api_key);
-		}
+    require_once dirname(__FILE__).'/ML_Rest.php';
 
-		function add( $subscriber = null, $resubscribe = 0 )
-		{
-			$subscriber['resubscribe'] = $resubscribe;
+    class ML_Subscribers extends ML_Rest
+    {
+        function ML_Subscribers( $api_key )
+        {
+            $this->name = 'subscribers';
 
-			return $this->execute( 'POST', $subscriber );
-		}
+            parent::__construct($api_key);
+        }
 
-		function addAll( $subscribers, $resubscribe = 0 )
-		{
-			$data['resubscribe'] = $resubscribe;
+        function add( $data = null, $resubscribe = 0 )
+        {
+            $data['resubscribe'] = $resubscribe;
 
-			$data['subscribers'] = $subscribers;
+            return $this->execute( 'POST', $data );
+        }
 
-			$this->path .= 'import/';
+        function addAll( $subscribers, $resubscribe = 0 )
+        {
+            $data['resubscribe'] = $resubscribe;
 
-			return $this->execute( 'POST', $data );
-		}
+            $data['subscribers'] = $subscribers;
 
-		function get( $email = null, $history = 0 )
-		{
-			$this->setId( null );
+            return $this->execute( 'POST', $data, 'import' );
+        }
 
-			$this->path .= '?email=' . urlencode( $email );
+        function get( $email = null, $history = 0 )
+        {
+            $this->setId( null );
 
-			if ( $history )
-				$this->path .= '&history=1';
+            $data['email'] = $email;
+            $data['history'] = $history;
 
-			return $this->execute( 'GET' );
-		}
+            return $this->execute( 'GET', $data );
+        }
 
-		function remove( $email = null )
-		{
-			$this->path .= '?email=' . urlencode( $email );
+        function remove( $email = null )
+        {
+            $data['email'] = $email;
 
-			return $this->execute( 'DELETE' );
-		}
+            return $this->execute( 'DELETE', $data );
+        }
 
-		function unsubscribe( $email )
-		{
-			$this->path .= 'unsubscribe/?email=' . urlencode( $email );
+        function unsubscribe( $email )
+        {
+            $data['email'] = $email;
 
-			return $this->execute( 'POST' );
-		}
-	}
+            return $this->execute( 'POST', $data, 'unsubscribe' );
+        }
+    }
 
 ?>

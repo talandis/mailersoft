@@ -1,57 +1,45 @@
 <?php
-	
-	require_once dirname(__FILE__).'/base/ML_Rest.php';
-	
-	class ML_Campaigns extends ML_Rest
-	{
-		function ML_Campaigns( $api_key )
-		{	
-			$this->name = 'campaigns';
 
-			parent::__construct($api_key);
-		}
+    require_once dirname(__FILE__).'/ML_Rest.php';
 
-		function getRecipients( $data = null )
-		{
-			$this->path .= 'recipients/';
+    class ML_Campaigns extends ML_Rest
+    {
+        function ML_Campaigns( $api_key )
+        {
+            $this->name = 'campaigns';
 
-			return $this->execute( 'GET', $data );
-		}
+            parent::__construct($api_key);
+        }
 
-		function getOpens( $data = null )
-		{
-			$this->path .= 'opens/';
+        function getRecipients( $data = null )
+        {
+            return $this->execute( 'GET', $data, 'recipients' );
+        }
 
-			return $this->execute( 'GET', $data );
-		}
+        function getOpens( $data = null )
+        {
+            return $this->execute( 'GET', $data, 'opens' );
+        }
 
-		function getClicks( $data = null )
-		{
-			$this->path .= 'clicks/';
+        function getClicks( $data = null )
+        {
+            return $this->execute( 'GET', $data, 'clicks' );
+        }
 
-			return $this->execute( 'GET', $data );
-		}
+        function getUnsubscribes( $data = null )
+        {
+            return $this->execute( 'GET', $data, 'unsubscribes' );
+        }
 
-		function getUnsubscribes( $data = null )
-		{
-			$this->path .= 'unsubscribes/';
+        function getBounces( $data = null )
+        {
+            return $this->execute( 'GET', $data, 'bounces' );
+        }
 
-			return $this->execute( 'GET', $data );
-		}
-
-		function getBounces( $data = null )
-		{
-			$this->path .= 'bounces/';
-
-			return $this->execute( 'GET', $data );
-		}
-
-		function getJunk( $data = null )
-		{
-			$this->path .= 'junks/';
-
-			return $this->execute( 'GET', $data );
-		}
-	}
+        function getJunk( $data = null )
+        {
+            return $this->execute( 'GET', $data, 'junks' );
+        }
+    }
 
 ?>
