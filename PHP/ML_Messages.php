@@ -1,6 +1,6 @@
 <?php
 	
-	require_once dirname(__FILE__).'/ML_Rest_Base.php';
+	require_once dirname(__FILE__).'/base/ML_Rest_Base.php';
 
 	class ML_Messages extends ML_Rest_Base
 	{
