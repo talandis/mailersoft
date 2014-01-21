@@ -157,7 +157,8 @@
 
 			$data = array(
 				'apiKey' => $this->apiKey,
-				'id' => $this->id
+				'id' => $this->id,
+                'language' => $this->language
 			);
 
 			if ( !empty( $this->batchRecipients ) ) {
