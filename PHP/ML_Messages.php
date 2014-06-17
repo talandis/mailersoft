@@ -170,6 +170,8 @@
 				$data['recipientEmail'] = $this->recipientEmail;
 				$data['variables'] = $this->variables;
 				$data['attachments'] = $this->attachments;
+                $data['fromName'] = $this->fromName;
+                $data['fromEmail'] = $this->fromEmail;
 			}
 
 			return $this->execute( 'POST', $data );
