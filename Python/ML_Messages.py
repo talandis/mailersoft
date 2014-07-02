@@ -1,73 +1,206 @@
-import urllib, urllib2, json
+from ML_Rest import ML_Rest
 
-class ML_Messages:
-    MAILER_SERVER_URI = 'https://api.mailersoft.com/api/v1/messages'
-    api_key = ''
-    from_name = ''
-    from_email = ''
-    variables = dict()
-    id = 0
-    recipient_email = ''
-    recipient_name = ''
-    batchRecipients = []
-
-    def __init__(self, apiKey):
-        self.set_api_key(apiKey)
-
-    def set_recipient(self, email, name=None):
-        self.recipient_email = email
-        if name:
-            self.recipient_name = name
-        return self
-
-    def set_api_key(self, api_key):
-        self.api_key = api_key
-        return self
-
-    def set_from_name(self, name):
-        self.from_name = name
-        return self
-
-    def set_from_email(self, email):
-        self.from_email = email
-        return self
-
-    def set_variables(self, variables):
-        if isinstance(variables, dict):
-            for name, value in variables.items():
-                self.set_variable(name, value)
-        return self
-
-    def set_variable(self, name, value):
-        self.variables[name] = value
-        return self
-
-    def set_id(self, id):
-        self.id = id
-        return self
+class ML_Messages(ML_Rest):
+    """
+    ML_Messages class is intended to be used for planning, queueing the newsletters for subscribers.
+    """
+    
+    def __init__(self, api_key):
+        """
+        Constructor for the ML_Messages class.
         
+        :param api_key: Your API Key for MailerSoft.
+        :type api_key: str
+        """
+        self._mc_parent = ML_Rest
+        self._mc_parent.__init__(self, api_key)
+        self._name = "messages"
+        
+        self._variables = {}
+        self._batch_recipients = []
+        self._attachments = []
+        self._recipient_email = ''
+        self._recipient_name = ''
+        self._from_email = ''
+        self._from_name = ''
+        self._type = ''
+        self._language = ''
+        self._reply_to_email = ''
+        self._reply_to_name = ''
+        
+        self._set_path()
+    
+    def set_recipient(self, email, name=''):
+        """
+        Set email and name of the recipient.
+        
+        :param email: Email address of the recipient
+        :type email: str
+        :param name: name of the recipient
+        :type name: str
+        
+        :returns: ML_Messages instance.
+        :rtype: ML_Messages
+        """
+        self._recipient_email = email
+        self._recipient_name = name
+        return self
+    
+    def set_from(self, email, name=''):
+        """
+        Set email address and name which will be seen as sent from.
+        
+        :param email: Email address of the FROM
+        :type email: str
+        :param name: name of the FROM
+        :type name: str
+        
+        :returns: ML_Messages instance.
+        :rtype: ML_Messages
+        """
+        self._from_email = email
+        self._from_name = name
+        return self
+    
+    def set_variables(self, variables={}):
+        """
+        Set variables which will be attached to the newsletter.
+        
+        :param variables: Variables to be attached to the newsletter.
+        :type variables: dict
+        
+        :returns: ML_Messages instance.
+        :rtype: ML_Messages
+        """
+        for key in variables.keys():
+            self.set_variable(key, variables[key])
+        return self
+    
+    def set_variable(self, key, value):
+        """
+        Set variable which will be attached to the newsletter.
+        
+        :param key: Name of the variable (key).
+        :type key: str
+        :param value: Value of the variable.
+        :type value: str, list or dict
+        
+        :returns: ML_Messages instance.
+        :rtype: ML_Messages
+        """
+        self._variables[key] = value
+        return self
+    
+    def set_type(self, type):
+        """
+        Set type of the newsletter.
+        
+        :param type: Type of the newsletter.
+        :type type: str
+        
+        :returns: ML_Messages instance.
+        :rtype: ML_Messages
+        """
+        self._type = type
+        return self
+    
+    def set_language(self, language):
+        """
+        Set language of the newsletter.
+        
+        :param language: Language of the newsletter.
+        :type language: str
+        
+        :returns: ML_Messages instance.
+        :rtype: ML_Messages
+        """
+        self._language = language
+        return self
+    
     def add_recipient(self, recipient):
-        self.batchRecipients.append(recipient)
-        return self
+        """
+        Add the recipient to the newsletter which will be sent.
         
+        :param recipient:
+            Recipient information.
+            Recipient is a dictionary with such keys: **recipientEmail**, **recipientName**, and **variables**.
+            The latter key for dictionary has value which has dictionary type, too.
+        :type recipient: dict
+        
+        :returns: ML_Messages instance.
+        :rtype: ML_Messages
+        """
+        self._batch_recipients.append(recipient)
+        return self
+    
     def add_recipients(self, recipients):
-        for item in recipients:
-        	self.add_recipient(item)
+        """
+        Add recipients to the newsletter.
+        
+        :param recipients: List of recipients to be added.
+        :type recipients: list
+        
+        :returns: ML_Messages instance.
+        :rtype: ML_Messages
+        """
+        self._batch_recipients += recipients
         return self
-
+    
+    def set_reply_to(self, email, name=''):
+        """
+        Set reply to email and name.
+        
+        :param email: Email address to which reply should be send.
+        :type email: str
+        :param name: name to which reply should be send.
+        :type name: str
+        
+        :returns: ML_Messages instance.
+        :rtype: ML_Messages
+        """
+        self._reply_to_email = email
+        self._reply_to_name = name
+        return self
+    
+    def add_attachment(self, filename, content):
+        """
+        Add attachment to the newsletter.
+        
+        :param filename: Filename of the attachment.
+        :type filename: str
+        :param content: Contents of the attachment.
+        :type content: str
+        
+        :returns: ML_Messages instance.
+        :rtype: ML_Messages
+        """
+        attachment = {
+            'filename': filename,
+            'contents': content
+        }
+        self._attachments.append(attachment)
+        return self
+    
     def send(self):
+        """
+        Send the newsletter.
+        
+        :returns: JSONObject of the newsletter sent. If everything is ok, the message should be queued.
+        :rtype: json
+        """
         data = {
-            'apiKey': self.api_key,
-            'id': self.id,
-            'recipientName': self.recipient_name,
-            'recipientEmail': self.recipient_email,
-            'variables': self.variables
+            'mailId': self._id,
+            'language': self._language,
+            'fromName': self._from_name,
+            'fromEmail': self._from_email
         }
         
-        data = {
-        	'apiKey': self.api_key,
-            'id': self.id,
-            'batch': self.batchRecipients
-        }
-        return urllib2.urlopen(self.MAILER_SERVER_URI, data=urllib.urlencode(data)).read()
-
+        if len(self._batch_recipients) > 0:
+            data['batch'] = self._batch_recipients
+        else:
+            data['recipientName'] = self._recipient_name
+            data['recipientEmail'] = self._recipient_email
+            data['variables'] = self._variables
+            data['attachments'] = self._attachments
+        
+        return self._mc_parent.post(self, data)
