@@ -38,7 +38,7 @@
 
         function getJunk( $data = null )
         {
-            return $this->execute( 'GET', $data, 'junks' );
+            return $this->execute( 'GET', $data, 'junk' );
         }
     }
 
