@@ -192,7 +192,7 @@ public class ML_Messages extends ML_Rest {
 	public ML_Messages addAttachment(String filename, Object content) {
 		HashMap<String, Object> attachment = new HashMap<String, Object>();
 		attachment.put("filename", filename);
-		attachment.put("content", content);
+		attachment.put("content", new String( Base64.encodeBase64(content.toString().getBytes())));
 		this.attachments.add(attachment);
 		return this;
 	}
@@ -213,6 +213,7 @@ public class ML_Messages extends ML_Rest {
 		data.put("language", this.language);
 		data.put("fromName", this.fromName);
 		data.put("fromEmail", this.fromEmail);
+		data.put("base64", "1");
 		
 		if (this.batchRecipients.size() > 0)
 			data.put("batch", this.batchRecipients);
