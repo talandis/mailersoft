@@ -59,11 +59,11 @@ namespace ML
             return this;
         }
 
-        public ML_Messages AddAttachment(string filename, string contents)
+        public ML_Messages AddAttachment(string filename, string content)
         {
             Dictionary<string, string> attachment = new Dictionary<string, string>();
             attachment.Add("filename", filename);
-            attachment.Add("contents", contents);
+            attachment.Add("content", content);
             this.attachments.Add(attachment);
             return this;
         }
