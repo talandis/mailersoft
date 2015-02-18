@@ -1,5 +1,5 @@
 <?php
-	
+
 	require_once dirname(__FILE__).'/base/ML_Rest_Base.php';
 
 	class ML_Messages extends ML_Rest_Base
@@ -30,8 +30,10 @@
 
 		private $isTest = 0;
 
+		private $tag;
+
         function __construct( $api_key ) {
-			
+
 			parent::__construct();
 
 			$this->apiKey = $api_key;
@@ -86,6 +88,13 @@
 
            return $this;
         }
+
+		public function setTag( $tag ) {
+
+			$this->tag = $tag;
+
+			return $this;
+		}
 
         public function setId( $id ) {
 
@@ -172,6 +181,7 @@
 				$data['attachments'] = $this->attachments;
                 $data['fromName'] = $this->fromName;
                 $data['fromEmail'] = $this->fromEmail;
+				$data['tag'] = $this->tag;
 			}
 
 			return $this->execute( 'POST', $data );
