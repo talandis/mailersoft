@@ -1,0 +1,14 @@
+{
+	"name": "talandis/mailersoft",
+	"description": "MailerSoft API PHP wrapper",
+	"type": "library",
+	"keywords": ["mailersoft"],
+	"require": {
+		"php": ">=5.2.0"
+	},
+	"autoload" : {
+		"classmap": [
+			"PHP/"
+		]
+	}	
+}
